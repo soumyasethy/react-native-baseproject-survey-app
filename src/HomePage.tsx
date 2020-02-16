@@ -1,13 +1,30 @@
 import React, {Component} from 'react';
-import {SafeAreaView} from 'react-native';
-import {SingleMultiChoiceCard} from 'component-library';
+import {
+  DynamicQuestionCard,
+  questionType,
+  AppContainer,
+  Swiper,
+} from 'component-library';
 import PropTypes from 'prop-types';
 
 class HomePage extends Component {
   render() {
     return (
-      <SafeAreaView style={{flex: 1}}>
-        <SingleMultiChoiceCard
+      <Swiper showsButtons={false} showsPagination={false} loop={false}>
+        <DynamicQuestionCard
+          type={questionType.singleChoice}
+          isMandatory={true}
+          question={' 1. What is the Source of drinking water'}
+          options={['River', 'Water Pump', 'Sea']}
+          onSelect={items => {
+            // console.warn('selected->', items);
+          }}
+          selectLimit={1}
+          selected={['Sea', 'River']}
+        />
+        <DynamicQuestionCard
+          type={questionType.gps}
+          isMandatory={true}
           question={' 1. What is the Source of drinking water'}
           options={['River', 'Water Pump', 'Sea']}
           onSelect={items => {
@@ -16,10 +33,21 @@ class HomePage extends Component {
           selectLimit={0}
           selected={['Sea', 'River']}
         />
-      </SafeAreaView>
+        <DynamicQuestionCard
+          type={questionType.multiChoice}
+          isMandatory={true}
+          question={' 1. What is the Source of drinking water'}
+          options={['River', 'Water Pump', 'Sea']}
+          onSelect={items => {
+            // console.warn('selected->', items);
+          }}
+          selectLimit={0}
+          selected={['Sea', 'River']}
+        />
+      </Swiper>
     );
   }
 }
 
 HomePage.propTypes = {};
-export default HomePage;
+export default AppContainer(HomePage);
