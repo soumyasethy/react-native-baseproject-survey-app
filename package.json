@@ -17,7 +17,7 @@
     "@react-navigation/native": "^5.0.0-alpha.33",
     "@react-navigation/stack": "^5.0.0-alpha.68",
     "axios": "^0.19.2",
-    "components-library": "git+https://github.com/soumyasethy/react-native-component-library.git",
+    "component-library": "git+https://github.com/soumyasethy/component-library.git",
     "mobx": "^5.14.2",
     "mobx-react": "^6.1.4",
     "moment": "^2.24.0",

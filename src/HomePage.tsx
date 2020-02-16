@@ -1,20 +1,25 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import {s, mVs} from 'components-library';
+import React, {Component} from 'react';
+import {SafeAreaView} from 'react-native';
+import {SingleMultiChoiceCard} from 'component-library';
+import PropTypes from 'prop-types';
 
-export function Home() {
-  return (
-    <View style={style.container}>
-      <View style={{height: mVs(100), width: s(200), backgroundColor: 'red'}} />
-      <Text style={{width: s(100)}}>Home Page</Text>
-    </View>
-  );
+class HomePage extends Component {
+  render() {
+    return (
+      <SafeAreaView style={{flex: 1}}>
+        <SingleMultiChoiceCard
+          question={' 1. What is the Source of drinking water'}
+          options={['River', 'Water Pump', 'Sea']}
+          onSelect={items => {
+            // console.warn('selected->', items);
+          }}
+          selectLimit={0}
+          selected={['Sea', 'River']}
+        />
+      </SafeAreaView>
+    );
+  }
 }
 
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+HomePage.propTypes = {};
+export default HomePage;
