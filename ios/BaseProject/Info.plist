@@ -3,7 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Please Sonu</string>
+	<string>Requesting for GPS</string>
+	<key>NSCameraUsageDescription</key>
+    <string>Requesting for Camera</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
