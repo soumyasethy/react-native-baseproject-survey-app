@@ -1,48 +1,20 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
-import {Navigator} from './src/navigator';
+import Navigator from './src/navigator';
 import {stores} from './src/store';
 import {Provider} from 'mobx-react';
 import {Network} from './src/network';
+import MyContext, {ContextHOC} from './src/context/MyContext';
 
 const App: () => any = () => {
-  const [token, setToken] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    async function init() {
-      // Network.SetupInterceptor();
-      setLoading(true);
-      const userToken = true; //tokenX; //await AsyncStorage.getItem('token');
-      if (userToken) {
-        setToken(userToken);
-      }
-      setLoading(false);
-    }
-    init();
-  }, []);
-
-  if (loading) {
-    return (
-      <View style={style.container}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
   return (
     <Provider {...stores}>
-      <Navigator token={token} />
+      <MyContext>
+        <Navigator />
+      </MyContext>
     </Provider>
   );
 };
-
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default App;
 

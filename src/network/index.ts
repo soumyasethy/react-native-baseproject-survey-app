@@ -48,16 +48,53 @@ const handleError = (error: {
 const login = (username: string, password: string) => {
   let url = API.login;
   //setAuthToken(username, password);
+  var bodyFormData = new FormData();
+  // bodyFormData.set('username', username);
+  bodyFormData.append('username', username);
+  bodyFormData.append('password', password);
+
   return axiosInstance
-    .post(url, {
-      username,
-      password,
-    })
+    .post(
+      url,
+      {username, password},
+      {
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+        },
+      },
+    )
     .catch(error => handleError(error));
+  //
+  //
+  // var myHeaders = new Headers();
+  // myHeaders.append('Content-Type', 'application/json;charset=utf-8');
+  //
+  // var raw = '{"username":"user_chattarpur","password":"chattarpur.123"}';
+  //
+  // var requestOptions = {
+  //   method: 'POST',
+  //   headers: myHeaders,
+  //   body: raw,
+  // };
+  //
+  // return fetch(API.login, requestOptions)
+  //   .then(response => response.text())
+  //   .then(result => console.warn('faetch response->', result))
+  //   .catch(error => console.warn('error', error));
 };
 
 const getSurveys = () => {
-  return axiosInstance.get(API.surverys).catch(error => handleError(error));
+  return axiosInstance
+    .get(API.surverys, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    })
+    .catch(error => handleError(error));
+};
+const getProfile = () => {
+  return axiosInstance.get(API.profile).catch(error => handleError(error));
 };
 
 export const Network = {
@@ -66,3 +103,6 @@ export const Network = {
   login,
   getSurveys,
 };
+
+const token =
+  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3MDUwLCJ1c2VybmFtZSI6InVzZXJfY2hhdHRhcnB1ciIsImV4cCI6MTU4NDQ0MTgzMCwiZW1haWwiOiIiLCJvcmlnX2lhdCI6MTU4MTg0OTgzMH0.2J5rzJo8bIOwQz9yrEPo8HtY6wF77eoV-xgXJeq6VDI';

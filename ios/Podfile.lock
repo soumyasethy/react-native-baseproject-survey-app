@@ -184,6 +184,8 @@ PODS:
   - React-jsinspector (0.61.5)
   - react-native-geolocation (1.4.2):
     - React
+  - react-native-image-picker (2.3.0):
+    - React
   - react-native-maps (0.26.1):
     - React
   - react-native-netinfo (5.3.3):
@@ -259,6 +261,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -317,6 +320,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-geolocation:
     :path: "../node_modules/@react-native-community/geolocation"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
   react-native-netinfo:
@@ -377,6 +382,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
   react-native-geolocation: 79c743ad7a2e86617811ef23f49308824e92520c
+  react-native-image-picker: e0b118c84e76f590a9d918baf06b0b043cbc5212
   react-native-maps: 6e499eee4eabf422ba8b6f94e993cc768bf35153
   react-native-netinfo: 75711548b53a527515d9226e6370249f75083e63
   react-native-safe-area-context: 042dfc9d4db17196841df962ba9497f6e7a5bd02

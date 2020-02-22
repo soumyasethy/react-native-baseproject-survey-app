@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {Component, useEffect} from 'react';
 import {SurveyCard} from 'component-library';
 import PropTypes from 'prop-types';
 import {pageType} from '../navigator/pageType';
@@ -7,29 +7,47 @@ import {storeType} from '../store/storeType';
 import {_goToPage} from '../navigator/RootNavigator';
 import {Network} from '../network';
 
-const Surveys = (props: any) => {
-  let {surveys, setActiveSurvey, setSurveysPayload} = props.surveyStore;
+@inject(storeType.surveyStore)
+@observer
+class Surveys extends Component {
+  componentDidMount(): void {
+    let {setSurveysPayload, setTest} = this.props.surveyStore;
+    //setTest('Hello world');
 
-  useEffect(() => {
     Network.getSurveys().then(response => {
       setSurveysPayload(response.data);
+      setTest(response.data);
     });
-  }, []);
+  }
+  componentDidUpdate(
+    prevProps: Readonly<{}>,
+    prevState: Readonly<{}>,
+    snapshot?: any,
+  ): void {
+    let {test, surveys} = this.props.surveyStore;
+    console.warn('test', test);
+  }
 
-  useEffect(() => {
-    console.warn('***surveys***', surveys);
-  }, [surveys]);
-
-  return (
-    <SurveyCard
-      data={surveys}
-      onCollect={(data: any) => {
-        setActiveSurvey(data);
-        _goToPage(pageType.TakeSurvey);
-      }}
-    />
-  );
-};
+  render() {
+    let {
+      surveys,
+      setActiveSurvey,
+      setSurveysPayload,
+      test,
+      setTest,
+    } = this.props.surveyStore;
+    return (
+      <SurveyCard
+        data={test}
+        onCollect={(data: any) => {
+          setActiveSurvey(data);
+          _goToPage(pageType.TakeSurvey);
+        }}
+      />
+    );
+  }
+}
 
 Surveys.propTypes = {};
-export default inject(storeType.surveyStore)(observer(Surveys));
+
+export default Surveys;
