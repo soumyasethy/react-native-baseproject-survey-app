@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CodePushDeploymentKey</key>
+	<string>Nbo55W2IiJOCht6CDKy1wI9IAEx_7nADrALDI</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Requesting for GPS</string>
 	<key>NSCameraUsageDescription</key>

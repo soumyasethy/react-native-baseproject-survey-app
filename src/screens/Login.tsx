@@ -114,7 +114,6 @@ const Login = (props: Props) => {
             addToSelected={() => {
               Network.login(userName, password).then(res => {
                 console.warn('***res***', res);
-                // _goToPage(pageType.Surveys);
                 props.userStore.setToken('dummy-token');
               });
               // signIn(userName, password);
