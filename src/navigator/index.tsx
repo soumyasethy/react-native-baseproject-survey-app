@@ -67,19 +67,19 @@ const AppNavigator = props => {
         <Stack.Screen
           name={pageType.Surveys}
           component={Surveys}
-          // options={{
-          //   title: 'Surveys',
-          //   animationTypeForReplace: /*state.isSignout ? 'pop' : */ 'push',
-          // }}
+          options={{
+            title: 'Surveys',
+            animationTypeForReplace: /*state.isSignout ? 'pop' : */ 'push',
+          }}
         />
       )}
       <Stack.Screen
         name={pageType.TakeSurvey}
         component={TakeSurvey}
-        // options={{
-        //   title: 'Take Survey',
-        //   animationTypeForReplace: 'pop', // /*state.isSignout ? 'pop' : */ 'push',
-        // }}
+        options={{
+          title: 'Take Survey',
+          animationTypeForReplace: 'pop', // /*state.isSignout ? 'pop' : */ 'push',
+        }}
       />
     </Stack.Navigator>
   );
