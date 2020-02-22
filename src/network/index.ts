@@ -1,11 +1,12 @@
 import axiosInstance from './axios/axiosInstance';
 import {SetupInterceptor} from './axios/interceptor';
-import {_retrieveData, _storeData} from '../storage';
-import {asyncStorage} from '../storage/Type';
 import Snackbar from 'react-native-snackbar';
-import {API} from './Api';
-import {COLORS} from 'component-library';
+import {API} from '../constants/Api';
+import {COLORS, _retrieveData, _storeData} from 'component-library';
 import moment from 'moment';
+import {constants} from '../constants';
+import {inject, observer} from 'mobx-react';
+import {storeType} from '../store/storeType';
 
 /*const setupNetworkConfig = async () => {
   return new Promise(async (resolve, reject) => {
@@ -64,25 +65,7 @@ const login = (username: string, password: string) => {
       },
     )
     .catch(error => handleError(error));
-  //
-  //
-  // var myHeaders = new Headers();
-  // myHeaders.append('Content-Type', 'application/json;charset=utf-8');
-  //
-  // var raw = '{"username":"user_chattarpur","password":"chattarpur.123"}';
-  //
-  // var requestOptions = {
-  //   method: 'POST',
-  //   headers: myHeaders,
-  //   body: raw,
-  // };
-  //
-  // return fetch(API.login, requestOptions)
-  //   .then(response => response.text())
-  //   .then(result => console.warn('faetch response->', result))
-  //   .catch(error => console.warn('error', error));
 };
-
 const getSurveys = () => {
   return axiosInstance
     .get(API.surverys, {
@@ -91,8 +74,17 @@ const getSurveys = () => {
         Authorization: 'Bearer ' + token,
       },
     })
-    .catch(error => handleError(error));
+    .catch(error => {
+      // _retrieveData(constants.asyncStorageKeys.offlineSurveys).then(res => {
+      //   console.warn('*******App Offline****');
+      //   props.setTest(res);
+      // });
+      return handleError(error);
+    });
 };
+
+// const getSurveys = inject(storeType.surveyStore)(observer(getSurveysX));
+
 const getProfile = () => {
   return axiosInstance.get(API.profile).catch(error => handleError(error));
 };

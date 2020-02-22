@@ -5,17 +5,16 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Surveys from '../screens/Surveys';
 import TakeSurvey from '../screens/TakeSurvey';
 import {pageType} from './pageType';
-import {navigationRef, isMountedRef} from './RootNavigator';
+import {navigationRef, isMountedRef} from './_goToPage';
 import {ActivityIndicator, StyleSheet, View, YellowBox} from 'react-native';
 import {inject, observer} from 'mobx-react';
 import {storeType} from '../store/storeType';
-
 import {_retrieveData} from 'component-library';
-import {AuthContext} from '../context/MyContext';
+import {constants} from '../constants';
 
 const Stack = createStackNavigator();
 export const Navigator = props => {
-  const {setToken} = React.useContext(AuthContext);
+  // const {setToken} = React.useContext(AuthContext);
 
   React.useEffect(() => {
     isMountedRef.current = true;
@@ -34,8 +33,9 @@ export const Navigator = props => {
     async function init() {
       // Network.SetupInterceptor();
       setLoading(true);
-      const userToken = props.userStore.token; //await _retrieveData.getItem('token');
-      console.warn('userToken->', userToken);
+      const userToken = await _retrieveData(constants.asyncStorageKeys.token);
+      //const userToken = props.userStore.token;
+      // console.warn('userToken->', userToken);
       if (!!userToken) {
         props.userStore.setToken(userToken);
       }
@@ -62,12 +62,21 @@ const AppNavigator = props => {
   return (
     <Stack.Navigator initialRouteName={pageType.Surveys}>
       {!props.token ? (
-        <Stack.Screen name={pageType.Login} component={Login} />
+        <Stack.Screen
+          name={pageType.Login}
+          component={Login}
+          options={{
+            headerShown: false,
+            title: 'login',
+            animationTypeForReplace: 'pop', // /*state.isSignout ? 'pop' : */ 'push',
+          }}
+        />
       ) : (
         <Stack.Screen
           name={pageType.Surveys}
           component={Surveys}
           options={{
+            headerShown: false,
             title: 'Surveys',
             animationTypeForReplace: /*state.isSignout ? 'pop' : */ 'push',
           }}
@@ -77,8 +86,9 @@ const AppNavigator = props => {
         name={pageType.TakeSurvey}
         component={TakeSurvey}
         options={{
+          headerShown: false,
           title: 'Take Survey',
-          animationTypeForReplace: 'pop', // /*state.isSignout ? 'pop' : */ 'push',
+          animationTypeForReplace: 'push', // /*state.isSignout ? 'pop' : */ 'push',
         }}
       />
     </Stack.Navigator>

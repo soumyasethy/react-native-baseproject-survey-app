@@ -1,10 +1,13 @@
 import {action, computed, observable} from 'mobx';
+import {_storeData, _retrieveData} from 'component-library';
+import {constants} from '../constants';
 
 /************ SurveyStore **************/
 export class SurveyStore {
   @observable test = [];
   @action setTest = data => {
     this.test = data;
+    _storeData(constants.asyncStorageKeys.offlineSurveys, data);
   };
   @observable surveys = [];
   @observable activeSurveyIndex = 0;
@@ -16,31 +19,24 @@ export class SurveyStore {
     this.activeSurvey = payload;
   };
   @action setSurveysPayload(payload: any) {
-    console.warn('***Payload***', payload);
     this.surveys = payload;
   }
-  /*@computed get getActiveSurveyIndex() {
-    return (this.activeSurveyIndex = findIndex(
-      this.test,
-      this.activeSurvey,
-    ));
-  }*/
 
   @action updateAnswer = (questionAnswerPayload: any) => {
-    console.warn('***Updating Answer.***', questionAnswerPayload);
     if (!questionAnswerPayload) return;
-    let questions = this.test[this.activeSurveyIndex].questions;
-    questions.map((question, questionIndex) => {
-      if (
-        question.question === questionAnswerPayload.question &&
-        !Object.is(question?.answer, questionAnswerPayload.answer)
-      ) {
-        console.warn('***Updated***', questionIndex, question.question);
-        this.test[this.activeSurveyIndex].questions[
-          questionIndex
-        ] = questionAnswerPayload;
-      }
-    });
+    let {questions} = this.test[this.activeSurveyIndex];
+    questions.map(
+      (question: {question: any; answer: any}, questionIndex: number) => {
+        if (
+          question.question === questionAnswerPayload.question &&
+          !Object.is(question?.answer, questionAnswerPayload.answer)
+        ) {
+          this.test[this.activeSurveyIndex].questions[
+            questionIndex
+          ] = questionAnswerPayload;
+        }
+      },
+    );
   };
 }
 export const surveyStore = new SurveyStore();
