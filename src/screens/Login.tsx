@@ -24,7 +24,7 @@ const usernameRef = React.createRef();
 const passwordRef = React.createRef();
 
 const Login = (props: Props) => {
-  const {signIn, test} = React.useContext(AppContextX);
+  const {signIn} = React.useContext(AppContextX);
   const [userName, setUserName] = useState('user_chattarpur');
   const [password, setPassword] = useState('chattarpur.123');
 
@@ -110,12 +110,7 @@ const Login = (props: Props) => {
             }}
             item={{text: 'Login'}}
             addToSelected={() => {
-              // Network.login(userName, password).then(res => {
-              //   console.warn('***res***', res);
-              //   props.userStore.setToken('dummy-token');
-              // });
               signIn(userName, password);
-              // test('Hello world');
             }}
             isSelected={true}
             isLoading={false}

@@ -1,13 +1,13 @@
-import {action, computed, observable} from 'mobx';
-import {_storeData, _retrieveData} from 'component-library';
+import {action, observable} from 'mobx';
+import {_storeData} from 'component-library';
 import {constants} from '../constants';
 
 /************ SurveyStore **************/
 export class SurveyStore {
   @observable test = [];
-  @action setTest = data => {
-    this.test = data;
-    _storeData(constants.asyncStorageKeys.offlineSurveys, data);
+  @action setTest = async data => {
+    this.test = await data;
+    await _storeData(constants.asyncStorageKeys.offlineSurveys, await data);
   };
   @observable surveys = [];
   @observable activeSurveyIndex = 0;

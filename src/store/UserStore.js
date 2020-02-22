@@ -1,5 +1,5 @@
-import {action, autorun, observable} from 'mobx';
-import {_storeData, _retrieveData} from 'component-library';
+import {action, observable} from 'mobx';
+import {_storeData} from 'component-library';
 import {constants} from '../constants';
 
 /************ UserStore **************/

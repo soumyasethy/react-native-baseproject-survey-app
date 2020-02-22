@@ -1,44 +1,25 @@
-import React, {Component, useEffect} from 'react';
+import React from 'react';
 import {SurveyCard} from 'component-library';
-import PropTypes from 'prop-types';
 import {pageType} from '../navigator/pageType';
-import {inject, observer} from 'mobx-react';
-import {storeType} from '../store/storeType';
 import {_goToPage} from '../navigator/_goToPage';
-import {Network} from '../network';
+import {AppContextX} from '../context/AppContext';
+import {observer, inject} from 'mobx-react';
+import {storeType} from '../store/storeType';
 
-@inject(storeType.surveyStore)
-@observer
-class Surveys extends Component {
-  componentDidMount(): void {
-    let {setSurveysPayload, setTest} = this.props.surveyStore;
+const Surveys = (props: any) => {
+  const {getSurveys} = React.useContext(AppContextX);
+  React.useEffect(() => {
+    getSurveys();
+  }, []);
 
-    Network.getSurveys().then(response => {
-      setSurveysPayload(response.data);
-      setTest(response.data);
-    });
-  }
+  return (
+    <SurveyCard
+      data={props.surveyStore.test}
+      onCollect={(data: any) => {
+        _goToPage(pageType.TakeSurvey);
+      }}
+    />
+  );
+};
 
-  render() {
-    let {
-      surveys,
-      setActiveSurvey,
-      setSurveysPayload,
-      test,
-      setTest,
-    } = this.props.surveyStore;
-    return (
-      <SurveyCard
-        data={test}
-        onCollect={(data: any) => {
-          setActiveSurvey(data);
-          _goToPage(pageType.TakeSurvey);
-        }}
-      />
-    );
-  }
-}
-
-Surveys.propTypes = {};
-
-export default Surveys;
+export default inject(storeType.surveyStore)(observer(Surveys));
