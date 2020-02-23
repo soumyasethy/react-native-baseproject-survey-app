@@ -17,6 +17,7 @@ import {inject, observer} from 'mobx-react';
 import {storeType} from '../store/storeType';
 import {Network} from '../network';
 import {AppContextX} from '../context/AppContext';
+
 type Props = {
   navigation: any;
 };
@@ -53,7 +54,7 @@ const Login = (props: Props) => {
         contentContainerStyle={styles.contentContainer}
         keyboardShouldPersistTaps="handled">
         <View style={style.container}>
-          <View style={{height: mS(60), width: '100%%'}}>
+          <View style={{height: mS(60), flex: 1}}>
             <InputComponent.TextField
               label={'User Name'}
               onChangeText={(text: any) =>
@@ -75,7 +76,7 @@ const Login = (props: Props) => {
               // error={errors.firstname}
             />
           </View>
-          <View style={{height: mS(60), width: '100%', marginTop: mS(16 * 2)}}>
+          <View style={{height: mS(60), flex: 1, marginTop: mS(16 * 2)}}>
             <InputComponent.TextField
               label={'Password'}
               onChangeText={(text: any) =>
