@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">BaseProject</string>
-    <string name="CodePushDeploymentKey">Nbo55W2IiJOCht6CDKy1wI9IAEx_7nADrALDI</string>
+    <string name="CodePushDeploymentKey">rj7j20Uu2ZPN99nMqdIZq-3L7lymgJ04HEqwIO</string>
+    <string name="CodePushDeploymentKeyStaging">Nbo55W2IiJOCht6CDKy1wI9IAEx_7nADrALDI</string>
+    <string name="CodePushDeploymentKeyProduction">rj7j20Uu2ZPN99nMqdIZq-3L7lymgJ04HEqwIO</string>
     <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="true" translatable="false">DO_NOT_ASK_JAVASCRIPT</string>
     <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
 </resources>

@@ -2,13 +2,15 @@ import axios from './axiosInstance';
 import {inject, observer} from 'mobx-react';
 import {storeType} from '../../store/storeType';
 
-const SetupInterceptor = props => {
-  console.warn('****token****', props.userStore.token);
+const SetupInterceptor = token => {
+  // console.log('****token****', token);
   // Add a request interceptor
   axios.interceptors.request.use(
     config => {
       // Do something before request is sent
-      config.headers.Authorization = `Bearer ${props.userStore.token}`;
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
       return config;
     },
     error => {
@@ -33,4 +35,4 @@ const SetupInterceptor = props => {
   );
 };
 
-export default inject(storeType.userStore)(observer(SetupInterceptor));
+export default SetupInterceptor;

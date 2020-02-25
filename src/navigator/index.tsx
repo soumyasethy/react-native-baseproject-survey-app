@@ -11,11 +11,10 @@ import {inject, observer} from 'mobx-react';
 import {storeType} from '../store/storeType';
 import {_retrieveData} from 'component-library';
 import {constants} from '../constants';
+import {Network} from '../network';
+import {AppNavigator} from './AppNavigator';
 
-const Stack = createStackNavigator();
 export const Navigator = props => {
-  // const {setToken} = React.useContext(AuthContext);
-
   React.useEffect(() => {
     isMountedRef.current = true;
     YellowBox.ignoreWarnings([
@@ -30,17 +29,15 @@ export const Navigator = props => {
 
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    async function init() {
-      // Network.SetupInterceptor();
+    const init = async () => {
       setLoading(true);
       const userToken = await _retrieveData(constants.asyncStorageKeys.token);
-      //const userToken = props.userStore.token;
-      // console.warn('userToken->', userToken);
       if (!!userToken) {
         props.userStore.setToken(userToken);
+        Network.SetupInterceptor(userToken);
       }
       setLoading(false);
-    }
+    };
     init();
   }, [props.userStore.token]);
   if (loading) {
@@ -58,42 +55,6 @@ export const Navigator = props => {
 };
 export default inject(storeType.userStore)(observer(Navigator));
 
-const AppNavigator = props => {
-  return (
-    <Stack.Navigator initialRouteName={pageType.Surveys}>
-      {!props.token ? (
-        <Stack.Screen
-          name={pageType.Login}
-          component={Login}
-          options={{
-            headerShown: false,
-            title: 'login',
-            animationTypeForReplace: 'pop', // /*state.isSignout ? 'pop' : */ 'push',
-          }}
-        />
-      ) : (
-        <Stack.Screen
-          name={pageType.Surveys}
-          component={Surveys}
-          options={{
-            headerShown: false,
-            title: 'Surveys',
-            animationTypeForReplace: /*state.isSignout ? 'pop' : */ 'push',
-          }}
-        />
-      )}
-      <Stack.Screen
-        name={pageType.TakeSurvey}
-        component={TakeSurvey}
-        options={{
-          headerShown: false,
-          title: 'Take Survey',
-          animationTypeForReplace: 'push', // /*state.isSignout ? 'pop' : */ 'push',
-        }}
-      />
-    </Stack.Navigator>
-  );
-};
 const style = StyleSheet.create({
   container: {
     flex: 1,

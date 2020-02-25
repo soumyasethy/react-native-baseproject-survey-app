@@ -3,11 +3,13 @@ import Navigator from './src/navigator';
 import {stores} from './src/store';
 import {Provider} from 'mobx-react';
 import AppContext from './src/context/AppContext';
-import codePush from 'react-native-code-push';
-
-let codePushOptions = {checkFrequency: codePush.CheckFrequency.ON_APP_START};
+import SplashScreen from './src/lib/spalshScreen';
+import {Platform} from 'react-native';
 
 const App: () => any = () => {
+  // React.useEffect(() => {
+  //   if (Platform.OS === 'android') SplashScreen.hide();
+  // }, []);
   return (
     <Provider {...stores}>
       <AppContext {...stores}>
@@ -16,4 +18,4 @@ const App: () => any = () => {
     </Provider>
   );
 };
-export default codePush(codePushOptions)(App);
+export default App;

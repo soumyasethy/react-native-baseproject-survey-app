@@ -11,6 +11,7 @@ export class UserStore {
   @observable token = '';
   @action
   setToken(token) {
+    // console.warn("Got New Token",token)
     this.token = token;
     _storeData(constants.asyncStorageKeys.token, token);
   }

@@ -76,11 +76,14 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    entryFile: "index.ts",
-    enableHermes: false,  // clean and rebuild if changing
+        bundleInDebug     : false,
+        bundleInRelease   : true,
+        entryFile   : "index.android.js",
+        enableHermes: false,  // clean and rebuild if changing
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -131,8 +134,8 @@ android {
         applicationId "com.baseproject"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.0"
     }
     splits {
         abi {
@@ -149,20 +152,27 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
-       release {
-                   if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
-                       storeFile file(MYAPP_UPLOAD_STORE_FILE)
-                       storePassword MYAPP_UPLOAD_STORE_PASSWORD
-                       keyAlias MYAPP_UPLOAD_KEY_ALIAS
-                       keyPassword MYAPP_UPLOAD_KEY_PASSWORD
-                   }
-               }
+        release {
+            storeFile file('hashtag.keystore')
+            storePassword 'showmeyo@s3'
+            keyAlias = 'hashtag'
+            keyPassword 'showmeyo@s3'
+            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+                storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            }
+        }
     }
     buildTypes {
         debug {
+            applicationIdSuffix ".debug"
+            buildConfigField "String", "CodePushDeploymentKey", '"Nbo55W2IiJOCht6CDKy1wI9IAEx_7nADrALDI"'
             signingConfig signingConfigs.debug
         }
         release {
+            buildConfigField "String", "CodePushDeploymentKey", '"rj7j20Uu2ZPN99nMqdIZq-3L7lymgJ04HEqwIO"'
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
             signingConfig signingConfigs.release
@@ -187,6 +197,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-code-push')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
@@ -205,5 +216,6 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

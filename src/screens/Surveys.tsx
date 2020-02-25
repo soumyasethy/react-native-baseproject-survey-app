@@ -8,9 +8,8 @@ import {storeType} from '../store/storeType';
 
 const Surveys = (props: any) => {
   const {getSurveys} = React.useContext(AppContextX);
-  React.useEffect(() => {
-    getSurveys();
-  }, []);
+
+  React.useEffect(() => getSurveys(), []);
 
   return (
     <SurveyCard

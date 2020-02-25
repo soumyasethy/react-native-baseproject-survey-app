@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {
+  screenWidth,
   shadow,
   COLORS,
   InputComponent,
@@ -17,6 +18,7 @@ import {inject, observer} from 'mobx-react';
 import {storeType} from '../store/storeType';
 import {Network} from '../network';
 import {AppContextX} from '../context/AppContext';
+import codePush from 'react-native-code-push';
 
 type Props = {
   navigation: any;
@@ -28,6 +30,18 @@ const Login = (props: Props) => {
   const {signIn} = React.useContext(AppContextX);
   const [userName, setUserName] = useState('user_chattarpur');
   const [password, setPassword] = useState('chattarpur.123');
+  React.useEffect(() => {
+    codePush.checkForUpdate().then(update => {
+      if (!update) {
+        console.warn('*************The app is up to date!', update);
+      } else {
+        console.warn(
+          '*************An update is available! Should we download it?',
+          update,
+        );
+      }
+    });
+  }, []);
 
   const onChangeText = ({text, type}) => {
     switch (type) {
@@ -42,7 +56,6 @@ const Login = (props: Props) => {
   const onSubmitEmail = () => {
     passwordRef.current.focus();
   };
-
   const onSubmitPassword = () => {
     passwordRef.current.blur();
   };
@@ -54,7 +67,7 @@ const Login = (props: Props) => {
         contentContainerStyle={styles.contentContainer}
         keyboardShouldPersistTaps="handled">
         <View style={style.container}>
-          <View style={{height: mS(60), flex: 1}}>
+          <View style={{height: mS(60), width: '100%'}}>
             <InputComponent.TextField
               label={'User Name'}
               onChangeText={(text: any) =>
@@ -76,7 +89,7 @@ const Login = (props: Props) => {
               // error={errors.firstname}
             />
           </View>
-          <View style={{height: mS(60), flex: 1, marginTop: mS(16 * 2)}}>
+          <View style={{height: mS(60), width: '100%', marginTop: mS(16 * 2)}}>
             <InputComponent.TextField
               label={'Password'}
               onChangeText={(text: any) =>
