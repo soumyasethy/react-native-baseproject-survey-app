@@ -1,1 +1,5 @@
-export const storeType = {userStore: 'userStore', surveyStore: 'surveyStore'};
+export const storeType = {
+  userStore: 'userStore',
+  surveyStore: 'surveyStore',
+  dbSyncStore: 'dbSyncStore',
+};

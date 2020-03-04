@@ -1,5 +1,6 @@
 import {userStore} from './UserStore';
 import {surveyStore} from './SurveyStore';
+import {dbSyncStore} from './dbSyncStore';
 
 /**
  * Combine all stores
@@ -7,4 +8,5 @@ import {surveyStore} from './SurveyStore';
 export const stores = {
   userStore,
   surveyStore,
+  dbSyncStore,
 };

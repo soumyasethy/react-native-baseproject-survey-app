@@ -1,10 +1,5 @@
 import {NavigationNativeContainer} from '@react-navigation/native';
-import Login from '../screens/Login';
 import React, {useEffect, useState} from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
-import Surveys from '../screens/Surveys';
-import TakeSurvey from '../screens/TakeSurvey';
-import {pageType} from './pageType';
 import {navigationRef, isMountedRef} from './_goToPage';
 import {ActivityIndicator, StyleSheet, View, YellowBox} from 'react-native';
 import {inject, observer} from 'mobx-react';

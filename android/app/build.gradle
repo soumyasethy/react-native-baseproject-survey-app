@@ -76,8 +76,8 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-        bundleInDebug     : false,
-        bundleInRelease   : true,
+//         bundleInDebug     : false,
+//         bundleInRelease   : true,
         entryFile   : "index.android.js",
         enableHermes: false,  // clean and rebuild if changing
 ]
@@ -197,7 +197,6 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-code-push')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
 

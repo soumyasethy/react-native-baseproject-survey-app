@@ -16,10 +16,6 @@ const login = (username: string, password: string) => {
 };
 const getSurveys = () => {
   return axiosInstance.get(API.surveys, defaultApiConfig).catch(error => {
-    // _retrieveData(constants.asyncStorageKeys.offlineSurveys).then(res => {
-    //   console.warn('*******App Offline****');
-    //   props.setTest(res);
-    // });
     return handleError(error);
   });
 };
@@ -29,10 +25,10 @@ const getProfile = () => {
     .get(API.profile, defaultApiConfig)
     .catch(error => handleError(error));
 };
-const surveySubmit = (endPoints: any, survey: any) => {
-  return axiosInstance
-    .post(`${API.baseUrl}${endPoints}`, survey, defaultApiConfig)
-    .catch(error => handleError(error));
+const surveySubmit = (url: any, survey: any) => {
+  return axiosInstance.post(url, survey, defaultApiConfig).catch(error => {
+    handleError(error);
+  });
 };
 
 export const Network = {

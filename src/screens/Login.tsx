@@ -4,6 +4,7 @@ import {
   ScrollView,
   StyleSheet,
   View,
+  Image,
 } from 'react-native';
 import React, {useState} from 'react';
 import {
@@ -19,6 +20,7 @@ import {storeType} from '../store/storeType';
 import {Network} from '../network';
 import {AppContextX} from '../context/AppContext';
 import codePush from 'react-native-code-push';
+import {assets} from '../assets';
 
 type Props = {
   navigation: any;
@@ -28,19 +30,21 @@ const passwordRef = React.createRef();
 
 const Login = (props: Props) => {
   const {signIn} = React.useContext(AppContextX);
-  const [userName, setUserName] = useState('user_chattarpur');
-  const [password, setPassword] = useState('chattarpur.123');
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
   React.useEffect(() => {
-    codePush.checkForUpdate().then(update => {
-      if (!update) {
-        console.warn('*************The app is up to date!', update);
-      } else {
-        console.warn(
-          '*************An update is available! Should we download it?',
-          update,
-        );
-      }
-    });
+    onChangeText({text: 'user_chattarpur', type: 'userName'});
+    onChangeText({text: 'chattarpur.123', type: 'password'});
+    // codePush.checkForUpdate().then(update => {
+    //   if (!update) {
+    //     console.warn('*************The app is up to date!', update);
+    //   } else {
+    //     console.warn(
+    //       '*************An update is available! Should we download it?',
+    //       update,
+    //     );
+    //   }
+    // });
   }, []);
 
   const onChangeText = ({text, type}) => {
@@ -67,6 +71,10 @@ const Login = (props: Props) => {
         contentContainerStyle={styles.contentContainer}
         keyboardShouldPersistTaps="handled">
         <View style={style.container}>
+          <Image
+            source={require('../assets/icons/logo.jpeg')}
+            style={{width: 200, height: 100, marginTop: mS(30)}}
+          />
           <View style={{height: mS(60), width: '100%'}}>
             <InputComponent.TextField
               label={'User Name'}

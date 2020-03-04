@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.microsoft.codepush.react.CodePush;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
@@ -38,10 +37,10 @@ ReactApplicationContext ctx;
                     return "index";
                 }
 
-                @Override
-                protected String getJSBundleFile() {
-                    return CodePush.getJSBundleFile();
-                }
+//                @Override
+//                protected String getJSBundleFile() {
+//                    return CodePush.getJSBundleFile();
+//                }
             };
 
     @Override
