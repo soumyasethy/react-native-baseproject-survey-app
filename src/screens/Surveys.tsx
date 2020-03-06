@@ -5,8 +5,7 @@ import {_goToPage} from '../navigator/_goToPage';
 import {AppContextX} from '../context/AppContext';
 import {observer, inject} from 'mobx-react';
 import {storeType} from '../store/storeType';
-import {View, Text, ActivityIndicator} from 'react-native';
-import {assets} from '../assets';
+import {View, ActivityIndicator} from 'react-native';
 import {constants} from '../constants';
 import {SurveyFormHeader} from '../components/SurveyFormsHeader';
 
@@ -32,6 +31,8 @@ const Surveys = (props: any) => {
   return (
     <View style={{backgroundColor: COLORS.white, flex: 1}}>
       <SurveyFormHeader {...props} syncNow={syncNow} />
+
+
       {props.dbSyncStore.isLoading && (
         <View style={{padding: mS(20)}}>
           <ActivityIndicator size="large" color={COLORS.blue} />

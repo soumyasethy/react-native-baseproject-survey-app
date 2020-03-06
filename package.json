@@ -27,7 +27,9 @@
     "npx-jetify": "npx jetify",
     "codepush-deployment-list": "appcenter codepush deployment list -a soumyasethy/DataCollector-AndroidRN",
     "mandatory-update": "appcenter codepush release-react -a soumyasethy/DataCollector-AndroidRN  -m --description \"Modified the header color\"",
-    "react-native run-ios --configuration Release": "react-native run-ios --configuration Release"
+    "react-native run-ios --configuration Release": "react-native run-ios --configuration Release",
+    "react-native run-android --configuration Release": "npx react-native run-android --configuration Release",
+    "fix-pod-install-bolb-ios": "grep -rl \"s.dependency 'React/Core'\" node_modules/ | xargs sed -i '' 's=React/Core=React-Core=g'"
   },
   "dependencies": {
     "@babel/plugin-proposal-decorators": "^7.8.3",
@@ -45,6 +47,7 @@
     "react": "16.9.0",
     "react-native": "0.61.5",
     "react-native-code-push": "^6.1.0",
+    "react-native-fetch-blob": "0.10.8",
     "react-native-geolocation-service": "^4.0.0",
     "react-native-gesture-handler": "^1.5.5",
     "react-native-image-picker": "^2.3.0",

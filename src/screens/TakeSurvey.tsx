@@ -10,13 +10,24 @@ const TakeSurvey = (props: any) => {
   const {
     dbSyncStore: {updateCurrentSurveyAnswer},
   } = props;
-  const {onSubmitSurvey} = React.useContext(AppContextX);
+  const {onSubmitSurvey, uploadPicture} = React.useContext(AppContextX);
 
   let editingDisabled =
     props.dbSyncStore.surveyMain.currentSurveyType ===
       constants.asyncStorageKeys.dbSyncType.surveysSubmittedSyncedArray ||
     props.dbSyncStore.surveyMain.currentSurveyType ===
       constants.asyncStorageKeys.dbSyncType.surveysSubmittedOfflineArray;
+
+  const updateAnswer = async (questionAnswer: any, type: string) => {
+    if (!type) updateCurrentSurveyAnswer(questionAnswer);
+    else if (type === 'image') {
+      const setS3BucketUrlCallBack = (uploadedS3Url: string) => {
+        console.warn('*****uploadURL****', uploadedS3Url);
+        updateCurrentSurveyAnswer({...questionAnswer, answer: uploadedS3Url});
+      };
+      await uploadPicture(questionAnswer?.answer, setS3BucketUrlCallBack);
+    }
+  };
 
   return (
     <TakeSurveyCard
@@ -25,7 +36,7 @@ const TakeSurvey = (props: any) => {
           props.dbSyncStore.surveyMain.currentSurveyType
         ][props.dbSyncStore.surveyMain.currentActiveIndex]
       }
-      updateAnswer={updateCurrentSurveyAnswer}
+      updateAnswer={updateAnswer}
       onExit={_goBack}
       onSubmit={editingDisabled ? _goBack : onSubmitSurvey}
       editingDisabled={editingDisabled}

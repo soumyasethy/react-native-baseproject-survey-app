@@ -3,6 +3,9 @@ import SetupInterceptor from './axios/interceptor';
 import Snackbar from 'react-native-snackbar';
 import {API} from '../constants/Api';
 import {COLORS} from 'component-library';
+import RNFetchBlob from 'react-native-fetch-blob';
+import React from 'react';
+import {AppContextX} from '../context/AppContext';
 
 const login = (username: string, password: string) => {
   let url = API.login;
@@ -26,9 +29,37 @@ const getProfile = () => {
     .catch(error => handleError(error));
 };
 const surveySubmit = (url: any, survey: any) => {
+  // console.warn('api called', url, survey);
   return axiosInstance.post(url, survey, defaultApiConfig).catch(error => {
     handleError(error);
   });
+};
+const uploadPicture = (
+  url: string,
+  filePathUri: string,
+  access_token: string,
+) => {
+  // console.warn('url', url, 'filePathUri', filePathUri);
+  if (!url && !filePathUri) return;
+  let filename = filePathUri.replace(/^.*[\\\/]/, '');
+  let filePath = filePathUri.split(filename)[0];
+
+  return RNFetchBlob.fetch(
+    'POST',
+    url,
+    {
+      Authorization: `Bearer ${access_token}`,
+      'Content-Type': 'multipart/form-data',
+    },
+    [
+      {
+        name: 'file',
+        filename: filename,
+        type: 'image/jpg',
+        data: RNFetchBlob.wrap(filePath.replace('file://', '')),
+      },
+    ],
+  );
 };
 
 export const Network = {
@@ -37,6 +68,7 @@ export const Network = {
   login,
   getSurveys,
   surveySubmit,
+  uploadPicture,
 };
 /************************ Api Config utils ****************************/
 const defaultApiConfig = {

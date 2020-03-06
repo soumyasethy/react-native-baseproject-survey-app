@@ -23,7 +23,6 @@ class DbSyncStore {
     this.surveyMain.currentSurveyType = type;
   };
   @action setStoreDataByType = (type: string, data: any) => {
-    // console.warn('***updating-store***', type, data);
     this.surveyMain[type] = data;
     this.surveyMain = {...this.surveyMain};
   };
@@ -68,13 +67,16 @@ class DbSyncStore {
       constants.asyncStorageKeys.dbSyncType.surveysSubmittedSyncedArray,
     );
   };
-  @action updateCurrentSurveyAnswer = (questionAnswerPayload: any) => {
+  @action updateCurrentSurveyAnswer = async (questionAnswerPayload: any) => {
     if (!questionAnswerPayload) return;
     let surveys = this.surveyMain[this.surveyMain.currentSurveyType];
     let {questions} = surveys[this.surveyMain.currentActiveIndex];
-    questions &&
-      questions.map(
-        (question: {question: any; answer: any}, questionIndex: number) => {
+    (await questions) &&
+      (await questions.map(
+        async (
+          question: {question: any; answer: any},
+          questionIndex: number,
+        ) => {
           if (
             question?.answer &&
             question?.answerId !== questionAnswerPayload?.answerId
@@ -82,19 +84,20 @@ class DbSyncStore {
             return;
           }
           if (
-            question.question === questionAnswerPayload.question &&
+            question.question === (await questionAnswerPayload.question) &&
             !Object.is(question?.answer, questionAnswerPayload.answer)
           ) {
             surveys[this.surveyMain.currentActiveIndex].questions[
               questionIndex
             ] = {
               ...questionAnswerPayload,
+              answer: questionAnswerPayload.answer,
               lastUpdated: moment().format(commonDateFormat),
             };
           }
         },
-      );
-    this.setStoreDataByType(
+      ));
+    await this.setStoreDataByType(
       constants.asyncStorageKeys.dbSyncType.surveysOngoingArray,
       surveys,
     );

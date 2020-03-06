@@ -1,5 +1,4 @@
 import {userStore} from './UserStore';
-import {surveyStore} from './SurveyStore';
 import {dbSyncStore} from './dbSyncStore';
 
 /**
@@ -7,6 +6,5 @@ import {dbSyncStore} from './dbSyncStore';
  */
 export const stores = {
   userStore,
-  surveyStore,
   dbSyncStore,
 };
