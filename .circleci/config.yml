@@ -14,9 +14,9 @@ jobs:
             - run:
                 name: Set ANDROID_HOME
                 command:  echo sdk.dir = $ANDROID_HOME > local.properties
-            - run:
-                name: Download Dependencies
-                command: ./gradlew androidDependencies
+#            - run:
+#                name: Download Dependencies
+#                command: ./gradlew androidDependencies
             - run:
                 name: Export Path
                 command: export PATH=~/.local/bin:$PATH
