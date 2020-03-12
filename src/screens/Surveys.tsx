@@ -10,12 +10,16 @@ import {constants} from '../constants';
 import {SurveyFormHeader} from '../components/SurveyFormsHeader';
 
 const Surveys = (props: any) => {
-  const {getSurveys, syncWithDb, syncWithServer} = React.useContext(
-    AppContextX,
-  );
+  const {
+    getSurveys,
+    syncWithDb,
+    syncWithServer,
+    syncWithServerX,
+  } = React.useContext(AppContextX);
   const syncNow = () => {
     console.warn('Start sync...');
-    syncWithServer();
+    // syncWithServer();
+    syncWithServerX();
   };
 
   React.useEffect(() => {
@@ -31,7 +35,6 @@ const Surveys = (props: any) => {
   return (
     <View style={{backgroundColor: COLORS.white, flex: 1}}>
       <SurveyFormHeader {...props} syncNow={syncNow} />
-
 
       {props.dbSyncStore.isLoading && (
         <View style={{padding: mS(20)}}>

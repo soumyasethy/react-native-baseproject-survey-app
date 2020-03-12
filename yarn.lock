@@ -5906,12 +5906,6 @@ react-is@^16.12.0, react-is@^16.6.0, react-is@^16.8.1, react-is@^16.8.4, react-i
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.12.0.tgz#2cc0fe0fba742d97fd527c42a13bec4eeb06241c"
   integrity sha512-rPCkf/mWBtKc97aLL9/txD8DZdemK0vkA3JMLShjlJB3Pj3s+lpf1KaBzMfQrAmhMQB0n1cU/SUGgKKBCe837Q==
 
-"react-native-camera@git+https://git@github.com/react-native-community/react-native-camera.git":
-  version "3.19.0"
-  resolved "git+https://git@github.com/react-native-community/react-native-camera.git#ea0e9e68e71fe30628ea355adb6c1e348ba32151"
-  dependencies:
-    prop-types "^15.6.2"
-
 react-native-code-push@^6.1.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/react-native-code-push/-/react-native-code-push-6.1.0.tgz#462755e1b302a896d0abf230af4a833562f5ddc9"

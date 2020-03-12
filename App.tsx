@@ -9,12 +9,17 @@ import {_logout} from 'component-library';
 
 const App: () => any = () => {
   React.useEffect(() => {
-    if (Platform.OS === 'android') {
-      //GetAllPermissions();
-      //SplashScreen.hide();
-    }
-    // _logout();
+    // Using an IIFE
+    (async function permissionCheckAndroid() {
+      if (Platform.OS === 'android') {
+        await GetAllPermissions();
+        //SplashScreen.hide();
+      }
+    })();
   }, []);
+  // React.useEffect(() => {
+  //   _logout();
+  // }, []);
   return (
     <Provider {...stores}>
       <AppContext {...stores}>

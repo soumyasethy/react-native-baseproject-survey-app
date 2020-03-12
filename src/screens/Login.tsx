@@ -91,7 +91,7 @@ const Login = (props: Props) => {
               enablesReturnKeyAutomatically={true}
               // onFocus={this.onFocus}
               returnKeyType="next"
-              title="Example, soumyasethy"
+              title="Example, user_chattarpur"
               maxLength={30}
               characterRestriction={20}
               // error={errors.firstname}

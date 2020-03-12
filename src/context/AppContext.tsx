@@ -9,34 +9,57 @@ import {showMessage} from '../utils/showMessage';
 
 export const AppContextX = React.createContext({
   access_token: '',
+  uploadPictureX: (upload_url: any, uri: string) => {},
+  syncWithServerX: () => {},
   syncWithServer: () => {},
   syncWithDb: () => {},
   signIn: () => {},
   getSurveys: () => {},
   onSubmitSurvey: () => {},
-  uploadPicture: (url: string, callback: any) => {},
+  uploadPicture: (upload_url: string, uri: string, token: string) => {},
 });
 
 const AppContext = () => {
   return ({children, ...props}: any) => {
     // console.warn('***StoreProps***', props);
-    const authContext = React.useMemo(() => {
+    const appContext = React.useMemo(() => {
       return {
         globalProps: props,
         access_token: props.userStore.token,
-        uploadPicture: async (uri: string, callback: any) => {
+        uploadPictureX: (upload_url: any, uri: string) => {
+          return Network.uploadPicture(
+            upload_url,
+            uri,
+            props.userStore.token,
+          ).then((response: any) => {
+            // console.warn('****response****', response.respInfo.status);
+            return {
+              status: response.respInfo.status,
+              public_url: JSON.parse(response.data).public_url || uri,
+            };
+          });
+        },
+        uploadPicture: async (
+          upload_url: string,
+          uri: string,
+          callback: any,
+        ) => {
+          // console.warn('upload_url', upload_url, 'uri', uri);
           let surveyAnswer =
             props.dbSyncStore.surveyMain[
               props.dbSyncStore.surveyMain.currentSurveyType
             ][props.dbSyncStore.surveyMain.currentActiveIndex];
 
-          if (!uri) return;
+          console.warn('surveyAnswer', surveyAnswer.upload_url);
+          if (!surveyAnswer || !uri) return;
           try {
             let uploadResponse = await Network.uploadPicture(
-              surveyAnswer.upload_url,
+              upload_url === null ? surveyAnswer.upload_url : upload_url,
               uri,
               props.userStore.token,
             );
+            console.warn('uploadResponse', uploadResponse);
+            return;
             !!callback &&
               (await callback(
                 JSON.parse(uploadResponse.data).public_url || uri,
@@ -51,57 +74,131 @@ const AppContext = () => {
         syncWithDb: async () => {
           await props.dbSyncStore.syncAllDbToStore();
         },
+        syncWithServerX: async () => {
+          let promiseUploadImage = [];
+          let promiseSyncServer = [];
+          let surveysSubmittedOfflineArray =
+            props.dbSyncStore.surveyMain.surveysSubmittedOfflineArray;
+          //Survey Level
+          for (let i = 0; i < surveysSubmittedOfflineArray.length; i++) {
+            for (
+              let j = 0;
+              j < surveysSubmittedOfflineArray[i].questions.length;
+              j++
+            ) {
+              //Question level
+              let question = surveysSubmittedOfflineArray[i].questions[j];
+              if (
+                question.type === 'cameraPicker' &&
+                !!question.answer &&
+                (question.answer.includes('file://') ||
+                  question.answer.includes('content://'))
+              ) {
+                let uploadImage = await appContext.uploadPictureX(
+                  surveysSubmittedOfflineArray[i].upload_url,
+                  question.answer,
+                );
+                console.warn(
+                  '***uploadImage***',
+                  uploadImage?.public_url,
+                  uploadImage,
+                );
+                surveysSubmittedOfflineArray[i].questions[j] = {
+                  ...question,
+                  answer: uploadImage?.public_url,
+                };
+                console.warn(
+                  'temp surveysSubmittedOfflineArray',
+                  surveysSubmittedOfflineArray,
+                );
+                // props.dbSyncStore.surveyMain.surveysSubmittedOfflineArray = surveysSubmittedOfflineArray;
+                //check all promise to upload image
+                promiseUploadImage.push(uploadImage);
+              }
+            }
+            promiseSyncServer.push(
+              Promise.all(promiseUploadImage).then(uploadResponses => {
+                console.warn('uploadResponses', uploadResponses);
+                //send single survey post all image upload
+
+                // appContext.onSubmitSurvey()
+                return appContext.onSubmitSurvey(
+                  surveysSubmittedOfflineArray[i],
+                  surveysSubmittedOfflineArray,
+                  i,
+                );
+              }),
+            );
+          }
+          return Promise.all(promiseSyncServer);
+
+          // Now I know how many images in single survey
+          /* return Promise.all(promiseUploadImage).then(uploadResponses => {
+            console.warn('uploadResponses', uploadResponses);
+            return uploadResponses;
+          });*/
+
+          //upload all images in single survey
+          //after post Single survey
+          //Next jump to new survey
+          //repeat
+        },
         syncWithServer: async () => {
           let surveysSubmittedOfflineArray =
             props.dbSyncStore.surveyMain.surveysSubmittedOfflineArray;
           if (!surveysSubmittedOfflineArray) return;
-          /*console.warn(
-            'surveysSubmittedOfflineArray',
-            surveysSubmittedOfflineArray,
-          );*/
 
           await surveysSubmittedOfflineArray.map(
             async (surveysSubmittedOfflineItem: any, surveyIndex: number) => {
               const assetsUpload: any[] = [];
-
-              surveysSubmittedOfflineItem.questions.map(
+              await surveysSubmittedOfflineItem.questions.map(
                 //Loop all question of each Survey
                 async (question: any, questionIndex: number) => {
                   //Upload Logic goes here
                   if (
-                    question.type === 'cameraPicker' &&
-                    !!question.answer &&
-                    question.answer.includes('file')
+                    (question.type === 'cameraPicker' &&
+                      !!question.answer &&
+                      question.answer.includes('file://')) ||
+                    question.answer.includes('content://')
                   ) {
-                    assetsUpload.push(
-                      authContext.uploadPicture(
-                        question.answer,
-                        async (uploadedUrl: any) => {
-                          //Uploaded URL Callback....
-                          if (!uploadedUrl) return;
-                          //Now update offline survey with uploaded url
-                          let questionAnswer = {
-                            ...question,
-                            answer: uploadedUrl,
-                          };
-                          //Updating answer with S3BucketUrl...
-                          surveysSubmittedOfflineArray[surveyIndex].questions[
-                            questionIndex
-                          ] = questionAnswer;
-                        },
-                      ),
+                    let uploadResponse = await appContext.uploadPicture(
+                      surveysSubmittedOfflineItem.upload_url,
+                      question.answer,
+                      async (uploadedUrl: any) => {
+                        //Uploaded URL Callback....
+                        if (!uploadedUrl) return;
+                        //Now update offline survey with uploaded url
+                        let questionAnswer = {
+                          ...question,
+                          answer: uploadedUrl,
+                        };
+                        //Updating answer with S3BucketUrl...
+                        surveysSubmittedOfflineArray[surveyIndex].questions[
+                          questionIndex
+                        ] = questionAnswer;
+                      },
                     );
+                    await assetsUpload.push(uploadResponse);
                   }
                 },
               );
-              Promise.all(assetsUpload)
-                .then(listOfS3BucketUrls => {
+              await props.dbSyncStore.setLoading(true);
+
+              await Promise.all(assetsUpload)
+                .then(async listOfS3BucketUrls => {
+                  console.warn('listOfS3BucketUrls', listOfS3BucketUrls);
+                  // return;
+
                   //List of S3BucketImageUrls ***
-                  authContext.onSubmitSurvey(
+                  appContext.onSubmitSurvey(
                     surveysSubmittedOfflineArray[surveyIndex],
+                    surveysSubmittedOfflineArray,
+                    surveyIndex,
                   );
+                  props.dbSyncStore.setLoading(false);
                 })
                 .catch(function(error) {
+                  props.dbSyncStore.setLoading(false);
                   // if there's an error, log it
                   console.warn(error);
                 });
@@ -114,7 +211,7 @@ const AppContext = () => {
           });
         },
         getSurveys: async () => {
-          props.surveyStore.setLoading(true);
+          props.dbSyncStore.setLoading(true);
           await Network.getSurveys().then(response => {
             props.dbSyncStore.updateStoreToDb(
               response?.data,
@@ -124,33 +221,58 @@ const AppContext = () => {
             props.dbSyncStore.setLoading(false);
           });
         },
-        onSubmitSurvey: (dynamicSurvey: any) => {
+        onSubmitSurvey: (
+          dynamicSurvey: any,
+          surveysSubmittedOfflineArray?: any,
+          surveyIndex?: number,
+        ) => {
           let surveyAnswer =
             dynamicSurvey ||
             props.dbSyncStore.surveyMain[
               props.dbSyncStore.surveyMain.currentSurveyType
             ][props.dbSyncStore.surveyMain.currentActiveIndex];
           // console.warn('*****OnSubmit Survey***', surveyAnswer);
-
-          Network.surveySubmit(surveyAnswer.url, surveyAnswer).then(
+          props.dbSyncStore.setLoading(true);
+          return Network.surveySubmit(surveyAnswer.url, surveyAnswer).then(
             response => {
+              props.dbSyncStore.setLoading(false);
               if (response) {
+                showMessage('Saved Successfully', COLORS.green);
                 props.dbSyncStore.updateStoreToDb(
                   [{...surveyAnswer, answerId: Math.random() * 10000}],
                   constants.asyncStorageKeys.dbSyncType
-                    ./*surveysSubmittedOfflineArray*/ surveysSubmittedSyncedArray,
+                    .surveysSubmittedSyncedArray,
                   false,
                 );
 
-                showMessage('Saved Successfully', COLORS.green);
+                //Sync with DB
+                //Remove Survey from List
+                if (surveysSubmittedOfflineArray && surveyIndex >= 0) {
+                  surveysSubmittedOfflineArray = surveysSubmittedOfflineArray.filter(
+                    (item: any, index: number) => {
+                      return index !== surveyIndex;
+                    },
+                  );
+
+                  props.dbSyncStore.updateStoreToDb(
+                    surveysSubmittedOfflineArray,
+                    constants.asyncStorageKeys.dbSyncType
+                      .surveysSubmittedOfflineArray,
+                    true,
+                  );
+                }
               } else {
-                showMessage('Saved Offline', COLORS.orange);
+                if (surveysSubmittedOfflineArray && surveyIndex >= 0) {
+                  showMessage('Unable to Sync with Server', COLORS.orange);
+                  return;
+                }
                 props.dbSyncStore.updateStoreToDb(
                   [surveyAnswer],
                   constants.asyncStorageKeys.dbSyncType
                     .surveysSubmittedOfflineArray,
                   false,
                 );
+                showMessage('Saved Offline', COLORS.orange);
               }
               props.dbSyncStore.updateStoreToDb(
                 [],
@@ -165,7 +287,7 @@ const AppContext = () => {
     }, []);
 
     return (
-      <AppContextX.Provider value={authContext}>
+      <AppContextX.Provider value={appContext}>
         <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
           <StatusBar backgroundColor={COLORS.white} barStyle="dark-content" />
           {children}

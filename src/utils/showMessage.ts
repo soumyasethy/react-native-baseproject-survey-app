@@ -3,7 +3,7 @@ import {COLORS} from 'component-library';
 
 export const showMessage = (title: string, color: string) => {
   Snackbar.show({
-    title: title,
+    text: title,
     duration: Snackbar.LENGTH_SHORT,
     backgroundColor: color || COLORS.blue,
   });
