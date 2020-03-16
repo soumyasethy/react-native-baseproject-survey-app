@@ -14,19 +14,22 @@ export const SurveyFormHeader = (props: any) => {
           flexDirection: 'row',
           padding: mS(16),
         }}>
-        <View
-          style={{justifyContent: 'space-between', flexDirection: 'column'}}>
-          <Text
-            style={{
-              color: COLORS.black,
-              fontSize: mS(20),
-              fontWeight: '700',
-            }}>{`Survey Forms`}</Text>
-          <Text
-            style={{
-              color: COLORS.grey777,
-              fontSize: mS(15),
-            }}>{`Recently Updated`}</Text>
+        <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
+          <View
+            style={{justifyContent: 'space-between', flexDirection: 'column'}}>
+            <assets.menu height={50} width={50} />
+            <Text
+              style={{
+                color: COLORS.black,
+                fontSize: mS(20),
+                fontWeight: '700',
+              }}>{`Survey Forms`}</Text>
+            <Text
+              style={{
+                color: COLORS.grey777,
+                fontSize: mS(15),
+              }}>{`Recently Updated`}</Text>
+          </View>
         </View>
         <assets.sync
           height={mS(40)}
